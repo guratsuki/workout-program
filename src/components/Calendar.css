@@ -17,3 +17,11 @@
 .calendar-day-current{
     color: red;
 }
+
+.calendar-day-today{
+    background-color: black;
+}
+
+.calendar-day-selected{
+    border: 5px solid blue;
+}

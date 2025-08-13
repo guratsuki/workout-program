@@ -7,7 +7,7 @@ function Calendar() {
     const [selectedDate, setSelectedDate] = useState(new Date())
 
     const getMonthName = (date: any) => {
-        return date.toLocaleString('default', {month: 'long'})
+        return date.toLocaleString('default', { month: 'long' })
     }
 
     const getYear = (date: any) => {
@@ -22,10 +22,18 @@ function Calendar() {
 
     const isToday = (day: any) => {
         const today = new Date()
-        return(
+        return (
             day === today.getDate() &&
             currentDate.getMonth() === today.getMonth() &&
             currentDate.getFullYear() === today.getFullYear()
+        )
+    }
+
+    const isSelected = (day: any) => {
+        return (
+            day === selectedDate.getDate() &&
+            currentDate.getMonth() === selectedDate.getMonth() &&
+            currentDate.getFullYear() === selectedDate.getFullYear()
         )
     }
 
@@ -38,22 +46,22 @@ function Calendar() {
         const startDay = firstDay.getDay()
 
         const currentMonthDays = []
-        for (let i = 1; i <= lastDay.getDate(); i++){
+        for (let i = 1; i <= lastDay.getDate(); i++) {
             currentMonthDays.push(i)
         }
 
         const prevMonthDays = []
-        if (startDay > 0){
+        if (startDay > 0) {
             const prevMonthLastDay = new Date(year, month, 0).getDate()
-            for (let i = 1; i < startDay; i++){
+            for (let i = 1; i < startDay; i++) {
                 prevMonthDays.push(prevMonthLastDay - startDay + 1 + i)
             }
         }
 
         const nextMonthDays = []
-        if (startDay < 8){
+        if (startDay < 8) {
             const nextMonthFirstDay = new Date(year, month + 1, 1).getDate()
-            for (let i = 0; i < 7; i++){
+            for (let i = 0; i < 7; i++) {
                 nextMonthDays.push(nextMonthFirstDay + i)
             }
         }
@@ -63,34 +71,47 @@ function Calendar() {
         const allDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays]
 
 
-        return allDays.map((day: any, index: number ) => {
+        return allDays.map((day: any, index: number) => {
             let dayToRender = day
             let classNameForDay = 'calendar-day'
 
             console.log(index)
 
-            if (index < prevMonthDays.length){
+            if (index < prevMonthDays.length || index >= prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-other-month-day'
             }
 
-            if (index > prevMonthDays.length && index < allDays.length - nextMonthDays.length){
+            if (index > prevMonthDays.length && index < allDays.length - nextMonthDays.length) {
                 classNameForDay += ' calendar-day-current'
             }
 
-            if (index >= allDays.length - nextMonthDays.length){
-                classNameForDay += ' calendar-other-month-day'
+            if (isToday(day)) {
+                classNameForDay += ' calendar-day-today'
             }
 
+            if (isSelected(day) && index > prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
+                classNameForDay += ' calendar-day-selected'
+            }
 
-            return(
-                <div className={classNameForDay}>
+            console.log(isToday(day))
+
+
+            const handleDaySelect = () => {
+                if (index > prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
+                    const newSelectedDay = new Date(year, month, day)
+                    setSelectedDate(newSelectedDay)
+                }
+            }
+
+            return (
+                <div className={classNameForDay} key={index} onClick={handleDaySelect}>
                     {dayToRender}
                 </div>
             )
         })
     }
 
-    return(
+    return (
         <div className="calendar-days">
             {renderDays()}
         </div>
