@@ -38,14 +38,52 @@ function Calendar() {
         const startDay = firstDay.getDay()
 
         const currentMonthDays = []
-        for (let i = 0; i <= lastDay.getDate(); i++){
+        for (let i = 1; i <= lastDay.getDate(); i++){
             currentMonthDays.push(i)
         }
 
-        return currentMonthDays.map((day: any, index: number ) => {
+        const prevMonthDays = []
+        if (startDay > 0){
+            const prevMonthLastDay = new Date(year, month, 0).getDate()
+            for (let i = 1; i < startDay; i++){
+                prevMonthDays.push(prevMonthLastDay - startDay + 1 + i)
+            }
+        }
+
+        const nextMonthDays = []
+        if (startDay < 8){
+            const nextMonthFirstDay = new Date(year, month + 1, 1).getDate()
+            for (let i = 0; i < 7; i++){
+                nextMonthDays.push(nextMonthFirstDay + i)
+            }
+        }
+
+        console.log(nextMonthDays)
+
+        const allDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays]
+
+
+        return allDays.map((day: any, index: number ) => {
             let dayToRender = day
+            let classNameForDay = 'calendar-day'
+
+            console.log(index)
+
+            if (index < prevMonthDays.length){
+                classNameForDay += ' calendar-other-month-day'
+            }
+
+            if (index > prevMonthDays.length && index < allDays.length - nextMonthDays.length){
+                classNameForDay += ' calendar-day-current'
+            }
+
+            if (index >= allDays.length - nextMonthDays.length){
+                classNameForDay += ' calendar-other-month-day'
+            }
+
+
             return(
-                <div className="calendar-day">
+                <div className={classNameForDay}>
                     {dayToRender}
                 </div>
             )
