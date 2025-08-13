@@ -1,0 +1,17 @@
+.calendar-days {
+    display: flex;
+
+}
+
+.calendar-day {
+    padding: 10px;
+    color: red;
+}
+
+.calendar-prev-month-day{
+    color: aqua;
+}
+
+.calendar-next-month-day{
+    color: orange;
+}
