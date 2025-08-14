@@ -5,9 +5,9 @@ function Navbar() {
 
     return (
         <>
-        <div className="navbar">
-            asd
-        </div>
+            <div className="navbar">
+                <h2>Aboba</h2>
+            </div>
         </>
     )
 }

@@ -60,8 +60,14 @@ function Calendar() {
         }
 
         const nextMonthDays = []
-        const remainingDays = 42 - (prevMonthDays.length + currentMonthDays.length);
-        for (let i = 1; i <= remainingDays; i++) {
+        let nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
+        // if (prevMonthDays.length + currentMonthDays.length > 35){
+        //     nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
+        // }
+        // else{
+        //     nextDays = 35 - (prevMonthDays.length + currentMonthDays.length);
+        // }
+        for (let i = 1; i <= nextDays; i++) {
             nextMonthDays.push(i)
         }
 
