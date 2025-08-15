@@ -5,38 +5,47 @@ import './toDoList.css'
 function ToDoList() {
     const [items, setItems] = useState([])
     const [showModal, setShowModal] = useState(false);
+    const [inputData, setInputData] = useState({});
 
     useEffect(() => {
-        axios.get('http://localhost:8000/items')
+        axios.get('http://localhost:5000/getitems')
             .then(res => {
                 setItems(res.data)
             })
     }, [])
 
+    console.log(items)
+
     const DisplayData = items.map((item: any, index: number) => {
         return (
             <tr>
-                <td>{index + 1}</td>
-                <td>{item.name}</td>
+                <td>{item.descr}</td>
+                <td>{item.todo_name}</td>
             </tr>
         )
     })
-
 
     const handleModalToggle = () => {
         setShowModal(!showModal);
     };
 
-    console.log(items)
 
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     const res = await axios.post("http://localhost:8000/api/olympiada", inputData);
-    //     alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
-    //     if (res.data.valid) {
-    //         handleModalToggle();
+    const handleSubmit = async (event:any) => {
+        event.preventDefault();
+        const res = await axios.post("http://localhost:5000/additem", inputData);
+        alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
+        console.log(inputData)
+        console.log('clicked')
+        if (res.data.valid) {
+            handleModalToggle();
+        }
+    };
+
+    // const handleCreateItem = async() => {
+    //     try{
+    //         await 
     //     }
-    // };
+    // }
 
     return (
         <>
@@ -64,10 +73,10 @@ function ToDoList() {
                 </table>
             </div>
 
-            {/* <div>
-                <input type="text" id="myInput" placeholder="Enter text here" />
+            <div>
+                <input type="text" id="myInput" placeholder="Enter text here" onChange={(e) => setInputData({ ...inputData, olymp_time: e.target.value })} />
                 <button type="button" onClick={handleSubmit}>Click Me</button>
-            </div> */}
+            </div>
         </>
 
 
