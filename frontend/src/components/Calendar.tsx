@@ -78,8 +78,6 @@ function Calendar() {
             let dayToRender = day
             let classNameForDay = 'calendar-day'
 
-            console.log(index)
-
             if (index < prevMonthDays.length || index >= prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-other-month-day'
             }
@@ -95,9 +93,6 @@ function Calendar() {
             if (isSelected(day) && index >= prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-day-selected'
             }
-
-            console.log(isToday(day))
-
 
             const handleDaySelect = () => {
                 if (index >= prevMonthDays.length && index < allDays.length - nextMonthDays.length) {

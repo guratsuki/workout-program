@@ -1,4 +1,4 @@
-
+import gif from '../assets/five_x.gif'
 import './Navbar.css'
 
 function Navbar() {
