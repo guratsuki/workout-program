@@ -1,82 +1,71 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 import './toDoList.css'
+import ToDoForm from './toDoForm';
+import type { Todo, TodoFormData } from '../container/types';
+
+const API_URL = 'http://localhost:5000'; 
 
 function ToDoList() {
-    const [items, setItems] = useState([])
-    const [showModal, setShowModal] = useState(false);
-    const [inputData, setInputData] = useState({});
+    const [items, setItems] = useState<Todo[]>([])
 
     useEffect(() => {
-        axios.get('http://localhost:5000/getitems')
+        axios.get(`${API_URL}/gettodos`)
             .then(res => {
                 setItems(res.data)
             })
     }, [])
 
+    const Refresh = async () => {
+        const res = await axios.get(`${API_URL}/gettodos`);
+        setItems(res.data);
+    };
+
     console.log(items)
 
-    const DisplayData = items.map((item: any, index: number) => {
+    const DisplayData = items.map((item: any) => {
         return (
             <tr>
-                <td>{item.descr}</td>
+                <td>{item.todo_time}</td>
+                <td>{item.todo_day}</td>
                 <td>{item.todo_name}</td>
+                <td>{item.todo_desc}</td>
             </tr>
         )
     })
 
-    const handleModalToggle = () => {
-        setShowModal(!showModal);
-    };
-
-
-    const handleSubmit = async (event:any) => {
-        event.preventDefault();
-        const res = await axios.post("http://localhost:5000/additem", inputData);
-        alert(res.data.valid ? "Данные добавлены" : "Неправильно введены данные");
-        console.log(inputData)
-        console.log('clicked')
-        if (res.data.valid) {
-            handleModalToggle();
+    const handleAddTodo = async (formData: TodoFormData) => {
+        const newtodo: Todo = {
+            ...formData,
+            id: Date.now().toString(),
+            completed: false
         }
-    };
+        console.log('data: ', newtodo)
 
-    // const handleCreateItem = async() => {
-    //     try{
-    //         await 
-    //     }
-    // }
+        const res = await axios.post(`${API_URL}/addtodos`, newtodo);
+        Refresh()
+        console.log('result: ', res)
+    }
 
     return (
         <>
-            <div className="AddButton">
-                <button onClick={() => handleModalToggle()}>
-                    Добавить
-                </button>
-            </div>
-
             <div>
                 <table className="table-main">
                     <thead className='table-header'>
                         <tr>
                             <th>Время</th>
+                            <th>День</th>
                             <th>Название</th>
+                            <th>Описание</th>
                         </tr>
                     </thead>
                     <tbody className='table-body'>
-                        <tr>
-                            <td>12:00</td>
-                            <td>Абоба</td>
-                        </tr>
                         {DisplayData}
                     </tbody>
                 </table>
             </div>
 
-            <div>
-                <input type="text" id="myInput" placeholder="Enter text here" onChange={(e) => setInputData({ ...inputData, olymp_time: e.target.value })} />
-                <button type="button" onClick={handleSubmit}>Click Me</button>
-            </div>
+            <ToDoForm onAdd={handleAddTodo} />
         </>
 
 

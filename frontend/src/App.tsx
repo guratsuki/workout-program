@@ -10,7 +10,7 @@ function App() {
     <>
       <Navbar />
       <Calendar />
-      <ToDoList />
+      {/* <ToDoList /> */}
     </>
   )
 }

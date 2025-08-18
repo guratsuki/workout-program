@@ -1,5 +1,11 @@
 import { useState } from "react"
 
+import axios from "axios";
+const API_URL = 'http://localhost:5000';
+import ToDoForm from './toDoForm';
+import type { Todo, TodoFormData } from '../container/types';
+
+
 import './Calendar.css'
 
 function Calendar() {
@@ -61,12 +67,14 @@ function Calendar() {
 
         const nextMonthDays = []
         let nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
+
         // if (prevMonthDays.length + currentMonthDays.length > 35){
         //     nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
         // }
         // else{
         //     nextDays = 35 - (prevMonthDays.length + currentMonthDays.length);
         // }
+
         for (let i = 1; i <= nextDays; i++) {
             nextMonthDays.push(i)
         }
@@ -98,6 +106,7 @@ function Calendar() {
                 if (index >= prevMonthDays.length && index < allDays.length - nextMonthDays.length) {
                     const newSelectedDay = new Date(year, month, day)
                     setSelectedDate(newSelectedDay)
+                    handleGetToDoByDay(newSelectedDay)
                 }
             }
 
@@ -121,20 +130,77 @@ function Calendar() {
         })
     }
 
+    const [items, setItems] = useState<Todo[]>([])
+
+    const handleGetToDoByDay = async (date: Date) => {
+        console.log("asd", date)
+        let reqdata = {'date': date.toLocaleString().substring(0, 10)}
+        console.log('selected date: ', reqdata)
+
+        const res = await axios.post(`${API_URL}/gettodobyday`, reqdata);
+        setItems(res.data)
+        console.log(res.data)
+    }
+
+    const handleAddTodo = async (formData: TodoFormData) => {
+        const newtodo: Todo = {
+            ...formData,
+            id: Date.now().toString(),
+            completed: false
+        }
+        console.log('data: ', newtodo)
+
+        const res = await axios.post(`${API_URL}/addtodos`, newtodo);
+        console.log('result: ', res)
+    }
+
+    const DisplayData = items.map((item: any) => {
+        return (
+            <tr>
+                <td>{item.todo_time}</td>
+                <td>{item.todo_day}</td>
+                <td>{item.todo_name}</td>
+                <td>{item.todo_desc}</td>
+            </tr>
+        )
+    })
+
     return (
-        <div className="calendar">
-            <div className="calendar-header">
-                <button onClick={() => changeMonth(-1)}>&lt;</button>
-                {getMonthName(currentDate)} {getYear(currentDate)}
-                <button onClick={() => changeMonth(1)}>&gt;</button>
+        <>
+            <div className="calendar">
+                <div className="calendar-header">
+                    <button onClick={() => changeMonth(-1)}>&lt;</button>
+                    {getMonthName(currentDate)} {getYear(currentDate)}
+                    <button onClick={() => changeMonth(1)}>&gt;</button>
+                </div>
+                <div className="calendar-week-days">
+                    {calendarWeekDays()}
+                </div>
+                <div className="calendar-days">
+                    {renderDays()}
+                </div>
             </div>
-            <div className="calendar-week-days">
-                {calendarWeekDays()}
+
+            <div>
+                <table className="table-main">
+                    <thead className='table-header'>
+                        <tr>
+                            <th>ВВВ</th>
+                            <th>День</th>
+                            <th>Название</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody className='table-body'>
+                        {DisplayData}
+                    </tbody>
+                </table>
             </div>
-            <div className="calendar-days">
-                {renderDays()}
-            </div>
-        </div>
+
+            <ToDoForm onAdd={handleAddTodo} />
+            
+        </>
+
     )
 }
 
