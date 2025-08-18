@@ -1,0 +1,12 @@
+.todo-form{
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 20vh;
+    
+}
+
+input{
+    border-radius: 10px;
+    height: 3vh;
+}

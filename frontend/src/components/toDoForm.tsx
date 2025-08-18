@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import type { TodoFormData } from '../container/types';
-import './toDoList.css'
+import './toDoForm.css'
 
 interface TodoFormProps {
     onAdd: (todo: TodoFormData) => void;
@@ -35,7 +35,7 @@ const ToDoForm: React.FC<TodoFormProps> = ({ onAdd }) => {
         <>
             <form onSubmit={handleSubmit} className="todo-form">
                 <input type="text" name="title" id="title" placeholder="Название" onChange={(handleChangeInput)} />
-                <textarea name="description" id="description" placeholder="Описание" onChange={(handleChangeInput)}></textarea>
+                <input type='text' name="description" id="description" placeholder="Описание" onChange={(handleChangeInput)}></input>
                 <input type="date" name="date" id="date" onChange={(handleChangeInput)} />
                 <input type="time" name="time" id="time" onChange={(handleChangeInput)} />
                 <button type="submit">Добавить задачу</button>

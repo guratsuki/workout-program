@@ -9,6 +9,10 @@
     margin-top: 20px;
 }
 
+.btn{
+    margin: auto;
+}
+
 .calendar-header {
     display: flex;
     padding: 15px;

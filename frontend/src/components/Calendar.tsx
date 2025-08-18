@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import axios from "axios";
 const API_URL = 'http://localhost:5000';
@@ -68,12 +68,12 @@ function Calendar() {
         const nextMonthDays = []
         let nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
 
-        // if (prevMonthDays.length + currentMonthDays.length > 35){
-        //     nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
-        // }
-        // else{
-        //     nextDays = 35 - (prevMonthDays.length + currentMonthDays.length);
-        // }
+        if (prevMonthDays.length + currentMonthDays.length > 35){
+            nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
+        }
+        else{
+            nextDays = 35 - (prevMonthDays.length + currentMonthDays.length);
+        }
 
         for (let i = 1; i <= nextDays; i++) {
             nextMonthDays.push(i)
@@ -153,6 +153,14 @@ function Calendar() {
         const res = await axios.post(`${API_URL}/addtodos`, newtodo);
         console.log('result: ', res)
     }
+
+    useEffect(() => {
+        let date = {'date': selectedDate.toLocaleString().substring(0, 10)}
+        axios.post(`${API_URL}/gettodobyday`, date)
+            .then(res => {
+                setItems(res.data)
+            })
+    }, [])
 
     const DisplayData = items.map((item: any) => {
         return (
