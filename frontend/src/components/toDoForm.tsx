@@ -23,23 +23,23 @@ const ToDoForm: React.FC<TodoFormProps> = ({ onAdd }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        console.log('1')
 
         onAdd(inputData)
-
-        console.log('data', inputData)
     }
 
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="todo-form">
-                <input type="text" name="title" id="title" placeholder="Название" onChange={(handleChangeInput)} />
-                <input type='text' name="description" id="description" placeholder="Описание" onChange={(handleChangeInput)}></input>
-                <input type="date" name="date" id="date" onChange={(handleChangeInput)} />
-                <input type="time" name="time" id="time" onChange={(handleChangeInput)} />
-                <button type="submit">Добавить задачу</button>
-            </form>
+            <div className='todo-div'>
+                <form onSubmit={handleSubmit} className="todo-form">
+                    <input type="text" name="title" id="title" placeholder="Название" onChange={(handleChangeInput)} />
+                    <input type='text' name="description" id="description" placeholder="Описание" onChange={(handleChangeInput)}></input>
+                    <input type="date" name="date" id="date" onChange={(handleChangeInput)} />
+                    <input type="time" name="time" id="time" onChange={(handleChangeInput)} />
+                    <button type="submit" className='todo-btn'>Добавить задачу</button>
+                </form>
+            </div>
+
         </>
 
 

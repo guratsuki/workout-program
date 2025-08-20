@@ -2,12 +2,13 @@
     margin: 0 auto;
     width: 80vh;
     background: #6b6969;
-    font-family: 'Arial', sans-serif;
     justify-content: center;
     border-radius: 10px;
     overflow: hidden;
     margin-top: 20px;
     color: white;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    
 }
 
 .table-header{

@@ -44,6 +44,8 @@ function Calendar() {
         )
     }
 
+    
+
     const renderDays = () => {
         const year = currentDate.getFullYear()
         const month = currentDate.getMonth()
@@ -68,10 +70,10 @@ function Calendar() {
         const nextMonthDays = []
         let nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
 
-        if (prevMonthDays.length + currentMonthDays.length > 35){
+        if (prevMonthDays.length + currentMonthDays.length > 35) {
             nextDays = 42 - (prevMonthDays.length + currentMonthDays.length);
         }
-        else{
+        else {
             nextDays = 35 - (prevMonthDays.length + currentMonthDays.length);
         }
 
@@ -100,6 +102,7 @@ function Calendar() {
 
             if (isSelected(day) && index >= prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-day-selected'
+                
             }
 
             const handleDaySelect = () => {
@@ -117,6 +120,7 @@ function Calendar() {
             )
         })
     }
+    
 
     const calendarWeekDays = () => {
         const daysNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
@@ -133,13 +137,10 @@ function Calendar() {
     const [items, setItems] = useState<Todo[]>([])
 
     const handleGetToDoByDay = async (date: Date) => {
-        console.log("asd", date)
-        let reqdata = {'date': date.toLocaleString().substring(0, 10)}
-        console.log('selected date: ', reqdata)
+        let reqdata = { 'date': date.toLocaleString().substring(0, 10) }
 
         const res = await axios.post(`${API_URL}/gettodobyday`, reqdata);
         setItems(res.data)
-        console.log(res.data)
     }
 
     const handleAddTodo = async (formData: TodoFormData) => {
@@ -148,19 +149,18 @@ function Calendar() {
             id: Date.now().toString(),
             completed: false
         }
-        console.log('data: ', newtodo)
 
         const res = await axios.post(`${API_URL}/addtodos`, newtodo);
-        console.log('result: ', res)
     }
 
     useEffect(() => {
-        let date = {'date': selectedDate.toLocaleString().substring(0, 10)}
+        let date = { 'date': selectedDate.toLocaleString().substring(0, 10) }
         axios.post(`${API_URL}/gettodobyday`, date)
             .then(res => {
                 setItems(res.data)
             })
     }, [])
+
 
     const DisplayData = items.map((item: any) => {
         return (
@@ -206,7 +206,7 @@ function Calendar() {
             </div>
 
             <ToDoForm onAdd={handleAddTodo} />
-            
+
         </>
 
     )

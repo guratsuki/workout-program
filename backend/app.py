@@ -102,8 +102,6 @@ def get_item_by_day():
             'todo_time': str(todo[4])
         })
 
-    print("todos", todos)
-
     conn.commit()
     cursor.close()
     conn.close()
@@ -115,14 +113,11 @@ def test():
     data = request.json
     conn = get_db_connection()
     cursor = conn.cursor()
-    print(data)
 
     cursor.execute(
         "select * from todo_list where todo_day = '2025-08-18'",
         (data['date'])
     )
-
-    print(todos)
 
     todos = []
     for todo in cursor.fetchall():
