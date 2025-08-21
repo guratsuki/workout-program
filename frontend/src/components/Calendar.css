@@ -73,10 +73,14 @@
     color: rgb(255, 255, 255);
 }
 
-.calendar-day-today {
+#calendar-day-today {
     background: rgb(196, 44, 44);
 }
 
-.calendar-day-selected {
+#calendar-day-selected {
     background: #723131;
+}
+
+.calendar-day-with-todo{
+    background: green;
 }

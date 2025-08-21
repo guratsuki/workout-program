@@ -24,8 +24,6 @@ def get_db_connection():
     except Exception as e:
         print(f"Error connecting to the database: {e}")
 
-    
-
 @app.route('/gettodos', methods=['GET'])
 def get_items():
     conn = get_db_connection()
@@ -55,7 +53,6 @@ def get_items():
     cursor.close()
     conn.close()
     
-    # return jsonify(data)
     return jsonify(todos)
 
 @app.route('/addtodos', methods=['POST'])

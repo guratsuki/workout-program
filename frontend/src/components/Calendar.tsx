@@ -12,6 +12,20 @@ function Calendar() {
     const [currentDate, setCurrentDate] = useState(new Date())
     const [selectedDate, setSelectedDate] = useState(new Date())
 
+
+    //asdfghjg
+    const [todos, setTodos] = useState<any[]>([])
+
+    useEffect(() => {
+        const fetchTodos = async () => {
+            const response = await axios.get('http://localhost:5000/gettodos');
+            setTodos(response.data);
+        };
+        fetchTodos();
+    }, []);
+
+    //asdfghfdjg
+
     const getMonthName = (date: any) => {
         let month = date.toLocaleString('default', { month: 'long' })
         return month.charAt(0).toUpperCase() + month.slice(1);
@@ -46,6 +60,8 @@ function Calendar() {
 
     
 
+
+
     const renderDays = () => {
         const year = currentDate.getFullYear()
         const month = currentDate.getMonth()
@@ -53,6 +69,8 @@ function Calendar() {
         const firstDay = new Date(year, month, 1)
         const lastDay = new Date(year, month + 1, 0)
         const startDay = firstDay.getDay()
+
+        const today = new Date()
 
         const currentMonthDays = []
         for (let i = 1; i <= lastDay.getDate(); i++) {
@@ -83,10 +101,22 @@ function Calendar() {
 
         const allDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays]
 
-
         return allDays.map((day: any, index: number) => {
+            let i = 0
             let dayToRender = day
             let classNameForDay = 'calendar-day'
+            let a = false
+            const dateFor = new Date(year, month, day + i + 1)
+            const dateString = dateFor.toISOString().replaceAll('.', "-").substring(0, 10)
+            todos.some(todo => {
+                if (todo.todo_day == dateString){
+                    console.log("abaoa")
+                    a = true
+                }
+            })
+
+            i += 1
+            let b = ''
 
             if (index < prevMonthDays.length || index >= prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-other-month-day'
@@ -98,11 +128,16 @@ function Calendar() {
 
             if (isToday(day)) {
                 classNameForDay += ' calendar-day-today'
+                b = "calendar-day-today"
             }
 
             if (isSelected(day) && index >= prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
                 classNameForDay += ' calendar-day-selected'
-                
+                b = "calendar-day-selected"
+
+            }
+            if (a && index >= prevMonthDays.length && index < allDays.length - nextMonthDays.length){
+                classNameForDay += ' calendar-day-with-todo'
             }
 
             const handleDaySelect = () => {
@@ -114,13 +149,13 @@ function Calendar() {
             }
 
             return (
-                <div className={classNameForDay} key={index} onClick={handleDaySelect}>
+                <div id={b} className={classNameForDay} key={index} onClick={handleDaySelect}>
                     {dayToRender}
                 </div>
             )
         })
     }
-    
+
 
     const calendarWeekDays = () => {
         const daysNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
@@ -134,6 +169,7 @@ function Calendar() {
         })
     }
 
+    //Data adding
     const [items, setItems] = useState<Todo[]>([])
 
     const handleGetToDoByDay = async (date: Date) => {
@@ -173,6 +209,8 @@ function Calendar() {
         )
     })
 
+    //Data adding
+
     return (
         <>
             <div className="calendar">
@@ -204,8 +242,8 @@ function Calendar() {
                     </tbody>
                 </table>
             </div>
-
-            <ToDoForm onAdd={handleAddTodo} />
+            {/* 
+            <ToDoForm onAdd={handleAddTodo} /> */}
 
         </>
 

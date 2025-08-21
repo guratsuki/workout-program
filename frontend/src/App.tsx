@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Calendar from './components/Calendar'
 import ToDoList from './components/toDoList'
+import Test from './components/test'
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
       <Navbar />
       <Calendar />
       {/* <ToDoList /> */}
+      {/* <Test /> */}
     </>
   )
 }
