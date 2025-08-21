@@ -58,7 +58,7 @@ function Calendar() {
         )
     }
 
-    
+
 
 
 
@@ -69,8 +69,6 @@ function Calendar() {
         const firstDay = new Date(year, month, 1)
         const lastDay = new Date(year, month + 1, 0)
         const startDay = firstDay.getDay()
-
-        const today = new Date()
 
         const currentMonthDays = []
         for (let i = 1; i <= lastDay.getDate(); i++) {
@@ -109,7 +107,7 @@ function Calendar() {
             const dateFor = new Date(year, month, day + i + 1)
             const dateString = dateFor.toISOString().replaceAll('.', "-").substring(0, 10)
             todos.some(todo => {
-                if (todo.todo_day == dateString){
+                if (todo.todo_day == dateString) {
                     console.log("abaoa")
                     a = true
                 }
@@ -136,7 +134,7 @@ function Calendar() {
                 b = "calendar-day-selected"
 
             }
-            if (a && index >= prevMonthDays.length && index < allDays.length - nextMonthDays.length){
+            if (a && index >= prevMonthDays.length && index < allDays.length - nextMonthDays.length) {
                 classNameForDay += ' calendar-day-with-todo'
             }
 
@@ -170,6 +168,12 @@ function Calendar() {
     }
 
     //Data adding
+    const Refresh = async () => {
+        axios.get(`${API_URL}/gettodos`).then((res) => {
+            setTodos(res.data);
+        });
+    };
+
     const [items, setItems] = useState<Todo[]>([])
 
     const handleGetToDoByDay = async (date: Date) => {
@@ -186,7 +190,9 @@ function Calendar() {
             completed: false
         }
 
-        const res = await axios.post(`${API_URL}/addtodos`, newtodo);
+        await axios.post(`${API_URL}/addtodos`, newtodo);
+        alert("Абоба")
+        Refresh()
     }
 
     useEffect(() => {
@@ -242,8 +248,8 @@ function Calendar() {
                     </tbody>
                 </table>
             </div>
-            {/* 
-            <ToDoForm onAdd={handleAddTodo} /> */}
+
+            <ToDoForm onAdd={handleAddTodo} />
 
         </>
 
