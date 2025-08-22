@@ -108,7 +108,6 @@ function Calendar() {
             const dateString = dateFor.toISOString().replaceAll('.', "-").substring(0, 10)
             todos.some(todo => {
                 if (todo.todo_day == dateString) {
-                    console.log("abaoa")
                     a = true
                 }
             })
@@ -125,12 +124,10 @@ function Calendar() {
             }
 
             if (isToday(day)) {
-                classNameForDay += ' calendar-day-today'
                 b = "calendar-day-today"
             }
 
             if (isSelected(day) && index >= prevMonthDays.length && index < prevMonthDays.length + currentMonthDays.length) {
-                classNameForDay += ' calendar-day-selected'
                 b = "calendar-day-selected"
 
             }
@@ -178,9 +175,18 @@ function Calendar() {
 
     const handleGetToDoByDay = async (date: Date) => {
         let reqdata = { 'date': date.toLocaleString().substring(0, 10) }
+        try {
+            const res = await axios.post(`${API_URL}/gettodobyday`, reqdata);
+            console.log(res)
+            setItems(res.data)
+        }
+        catch (err: any) {
+            console.log(err.response.data.message)
+        }
 
-        const res = await axios.post(`${API_URL}/gettodobyday`, reqdata);
-        setItems(res.data)
+        // const res = await axios.post(`${API_URL}/gettodobyday`, reqdata);
+        // console.log('asd')
+        // setItems(res.data)
     }
 
     const handleAddTodo = async (formData: TodoFormData) => {
@@ -192,6 +198,15 @@ function Calendar() {
 
         await axios.post(`${API_URL}/addtodos`, newtodo);
         alert("Абоба")
+        Refresh()
+    }
+
+    const handleDelete = async (id: any) => {
+        const res = await axios.delete(`${API_URL}/deletetodo/${id}`)
+        console.log("qwe", res.data)
+        console.log(res)
+        if (res.status == 200)
+            alert("Удалено")
         Refresh()
     }
 
@@ -211,6 +226,11 @@ function Calendar() {
                 <td>{item.todo_day}</td>
                 <td>{item.todo_name}</td>
                 <td>{item.todo_desc}</td>
+                <td>
+                    <button onClick={() => { handleDelete(item.id) }}>
+                        Удалить
+                    </button>
+                </td>
             </tr>
         )
     })
@@ -237,7 +257,7 @@ function Calendar() {
                 <table className="table-main">
                     <thead className='table-header'>
                         <tr>
-                            <th>ВВВ</th>
+                            <th>Время</th>
                             <th>День</th>
                             <th>Название</th>
                             <th>Описание</th>

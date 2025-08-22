@@ -82,56 +82,111 @@ def get_item_by_day():
     data = request.json
     conn = get_db_connection()
     cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "select id, todo_name, todo_desc, todo_day, todo_time from todo_list where todo_day = %s" \
+            "order by todo_time asc;",
+            (data['date'],)
+        )
 
-    cursor.execute(
-        "select id, todo_name, todo_desc, todo_day, todo_time from todo_list where todo_day = %s" \
-        "order by todo_time asc;",
-        (data['date'],)
-    )
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Запись не найдена'}), 404
+        
+        todos = []
+        for todo in cursor.fetchall():
+            todos.append({
+                'id': todo[0],
+                'todo_name': todo[1],
+                'todo_desc': todo[2],
+                'todo_day': todo[3].strftime('%Y-%m-%d'),
+                'todo_time': str(todo[4])
+            })
 
-    todos = []
-    for todo in cursor.fetchall():
-        todos.append({
-            'id': todo[0],
-            'todo_name': todo[1],
-            'todo_desc': todo[2],
-            'todo_day': todo[3].strftime('%Y-%m-%d'),
-            'todo_time': str(todo[4])
-        })
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        return jsonify(todos), 200
 
-    return jsonify(todos)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'code': 500,
+            'message': 'Ошибка базы данных',
+            'details': str(e)
+        }), 500
+    
+    finally:
+        cursor.close()
+        conn.close()
 
-@app.route('/test', methods=['POST'])
-def test():
-    data = request.json
+    # todos = []
+    # for todo in cursor.fetchall():
+    #     todos.append({
+    #         'id': todo[0],
+    #         'todo_name': todo[1],
+    #         'todo_desc': todo[2],
+    #         'todo_day': todo[3].strftime('%Y-%m-%d'),
+    #         'todo_time': str(todo[4])
+    #     })
+
+    # conn.commit()
+    # cursor.close()
+    # conn.close()
+
+    # return jsonify(todos)
+
+# @app.route('/test', methods=['POST'])
+# def test():
+#     data = request.json
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
+
+#     cursor.execute(
+#         "select * from todo_list where todo_day = '2025-08-18'",
+#         (data['date'])
+#     )
+
+#     todos = []
+#     for todo in cursor.fetchall():
+#         todos.append({
+#             'id': todo[0],
+#             'todo_name': todo[1],
+#             'todo_desc': todo[2],
+#             'todo_day': todo[3].strftime('%Y-%m-%d'),
+#             'todo_time': str(todo[4])
+#         })
+
+#     conn.commit()
+#     cursor.close()
+#     conn.close()
+
+#     return jsonify(todos)
+
+@app.route('/deletetodo/<int:id>', methods=['DELETE'])
+def deletetodo(id):
+    print(id)
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "select * from todo_list where todo_day = '2025-08-18'",
-        (data['date'])
-    )
+    try:
+        cursor.execute(
+            "delete from todo_list where id = %s",
+            (id,)
+        )
+        conn.commit()
 
-    todos = []
-    for todo in cursor.fetchall():
-        todos.append({
-            'id': todo[0],
-            'todo_name': todo[1],
-            'todo_desc': todo[2],
-            'todo_day': todo[3].strftime('%Y-%m-%d'),
-            'todo_time': str(todo[4])
-        })
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return jsonify(todos)
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Запись не найдена'}), 404
+        
+        return jsonify({'message': 'Запись удалена'}), 200
     
-
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+    finally:
+        cursor.close()
+        conn.close()
+    
 if __name__ == '__main__':
     app.run(debug=True)

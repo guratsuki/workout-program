@@ -63,6 +63,7 @@
 .calendar-day:hover{
     background: #723131;
     transition: all 0.4s;
+    outline: 2px solid black;
 }
 
 .calendar-other-month-day {

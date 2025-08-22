@@ -24,7 +24,7 @@ const Test: React.FC = () => {
             const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
             const dateString = date.toISOString().split('T')[0];
             let a = false
-            const hasTodos = todos.some(todo => {
+            todos.some(todo => {
                 if (todo.todo_day == dateString){
                     a = true
                 }
